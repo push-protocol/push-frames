@@ -9,8 +9,8 @@ export async function GET(req: any) {
     env: CONSTANTS.ENV.STAGING,
   });
   const channelInfo = await userAlice.channel.info(channel);
-
-  const image_url = `${process.env.NEXT_PUBLIC_HOST}/api/image?section=1&name=${channelInfo.name}&info=${channelInfo.info}&count=${channelInfo.subscriber_count}`;
+  const verified = channelInfo.verified_status;
+  const image_url = `${process.env.NEXT_PUBLIC_HOST}/api/image?section=1&name=${channelInfo.name}&info=${channelInfo.info}&count=${channelInfo.subscriber_count}&verified=${verified}`;
   return new NextResponse(
     `<!DOCTYPE html>
       <html>
