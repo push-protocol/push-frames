@@ -7,8 +7,6 @@ import fs from "fs";
 const fontPath = join(process.cwd(), "public/ProtestStrike-Regular.ttf");
 let myFont = fs.readFileSync(fontPath);
 
-export const dynamic = "force-dynamic";
-
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
   const name = searchParams.get("name") ?? "";
