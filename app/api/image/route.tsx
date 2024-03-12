@@ -15,10 +15,8 @@ export async function GET(req: NextRequest) {
   const subCount = searchParams.get("count") ?? "";
   const verified = searchParams.get("verified") ?? "";
   const section = searchParams.get("section") ?? "1";
-  console.log("name", name);
-  console.log("info", info);
-  console.log("icon", icon);
-  console.log("subCount", subCount);
+  const message = searchParams.get("message") ?? "";
+
   const image_url = `${process.env.NEXT_PUBLIC_HOST}/bg.png`;
   return new ImageResponse(
     (
@@ -35,7 +33,7 @@ export async function GET(req: NextRequest) {
           backgroundPosition: "center",
         }}
       >
-        {getSection(section, name, verified, info, subCount)}
+        {getSection(section, name, verified, info, subCount, message)}
       </div>
     ),
     {
@@ -58,7 +56,8 @@ type getSection = (
   name?: string,
   verified?: string,
   info?: string,
-  subCount?: string
+  subCount?: string,
+  message?: string
 ) => JSX.Element;
 
 const getSection: getSection = (
@@ -66,7 +65,8 @@ const getSection: getSection = (
   name,
   verified,
   info,
-  subCount
+  subCount,
+  message
 ) => {
   switch (section) {
     case "1":
@@ -200,6 +200,9 @@ const getSection: getSection = (
           >
             Error
           </h1>
+          {message && (
+            <p style={{fontSize: "50px", textAlign: "center"}}>{message}</p>
+          )}
         </div>
       );
     default:
