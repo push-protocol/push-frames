@@ -76,7 +76,7 @@ const getSection: getSection = (
             display: "flex",
             flexDirection: "column",
             gap: "20px",
-            width: "800px",
+            width: "1500px",
             justifyContent: "center",
             alignItems: "center",
           }}
@@ -84,7 +84,7 @@ const getSection: getSection = (
           {name && (
             <h1
               style={{
-                fontSize: "120px",
+                fontSize: "160px",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
@@ -95,9 +95,9 @@ const getSection: getSection = (
             </h1>
           )}
           {info && (
-            <p style={{fontSize: "30px", textAlign: "center"}}>{info}</p>
+            <p style={{fontSize: "50px", textAlign: "center"}}>{info}</p>
           )}
-          <p style={{fontSize: "30px", color: "white"}}>
+          <p style={{fontSize: "50px", color: "white"}}>
             Subscribers: {subCount ?? 0}
           </p>
         </div>
