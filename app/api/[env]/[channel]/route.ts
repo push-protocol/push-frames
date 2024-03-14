@@ -116,14 +116,18 @@ export async function GET(req: any, params: any) {
   }
 }
 export async function POST(req: any) {
-  const image_url = `${process.env.NEXT_PUBLIC_HOST}/api/image?section=2`;
+  const body = await req.json();
+  const status = body.status;
+  const message = body.message;
+  const image_url = `${process.env.NEXT_PUBLIC_HOST}/api/image?section=${
+    status === "error" ? "error" : "2"
+  }&message=${message}`;
   return new NextResponse(
     `<!DOCTYPE html>
       <html>
         <head>
           <meta property="og:image" content="${image_url}" />
           <meta name="fc:frame" content="vNext" />
-          <meta name="fc:frame:post_url" content="${process.env.NEXT_PUBLIC_HOST}/api/staging/success" />
           <meta name="fc:frame:image" content="${image_url}" />
           <meta name="fc:frame:button:1" content="Visit Push Dapp" />
           <meta name="fc:frame:button:1:action" content="link" />
