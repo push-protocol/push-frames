@@ -3,9 +3,9 @@ import {PushAPI, CONSTANTS} from "@pushprotocol/restapi";
 import {ethers} from "ethers";
 import {isAddress} from "ethers/lib/utils";
 
-export async function GET(req: any) {
-  const channel = req.nextUrl.searchParams.get("channel") || "";
-  console.log(channel);
+export async function GET(req: any, params: any) {
+  const channel = params.params.channel;
+
   if (!isAddress(channel)) {
     const image_url = `${process.env.NEXT_PUBLIC_HOST}/api/image?section=error&message=Not a Valid Address`;
     return new NextResponse(
