@@ -127,7 +127,7 @@ export async function POST(req: any) {
           <meta name="fc:frame:image" content="${image_url}" />
           <meta name="fc:frame:button:1" content="Visit Push Dapp" />
           <meta name="fc:frame:button:1:action" content="link" />
-          <meta name="fc:frame:button:1:target" content="https://app.push.org" />
+          <meta name="fc:frame:button:1:target" content="https://push.org" />
         
         </head>
         <body/>
