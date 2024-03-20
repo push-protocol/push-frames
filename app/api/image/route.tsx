@@ -283,7 +283,7 @@ const getSection: getSection = (
                   }}
                 >
                   {/* {chain === "matic" || chain === "polygon" ? "$MATIC" : "$ETH"} */}
-                  {getToken(chain)}
+                  {getToken(chain!)}
                 </span>
                 to
               </div>
