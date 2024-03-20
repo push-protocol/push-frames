@@ -67,17 +67,17 @@ export async function GET(req: any, params: any) {
         <head>
           <meta property="og:image" content="${image_url}" />
           <meta name="fc:frame" content="vNext" />
-          <meta name="fc:frame:post_url" content="${process.env.NEXT_PUBLIC_HOST}/api/pay/${chain}/${address}" />
+          <meta name="fc:frame:post_url" content="${process.env.NEXT_PUBLIC_HOST}/api/pay/${chain}/${addressOrName}" />
           <meta name="fc:frame:image" content="${image_url}" />
           <meta name="fc:frame:button:1" content="Pay $5" />
           <meta name="fc:frame:button:1:action" content="tx" />
-          <meta name="fc:frame:button:1:target" content="${process.env.NEXT_PUBLIC_HOST}/api/pay/${chain}/${address}/tx" />
+          <meta name="fc:frame:button:1:target" content="${process.env.NEXT_PUBLIC_HOST}/api/pay/${chain}/${addressOrName}/tx" />
           <meta name="fc:frame:button:2" content="Pay $10" />
           <meta name="fc:frame:button:2:action" content="tx" />
-          <meta name="fc:frame:button:2:target" content="${process.env.NEXT_PUBLIC_HOST}/api/pay/${chain}/${address}/tx" />
+          <meta name="fc:frame:button:2:target" content="${process.env.NEXT_PUBLIC_HOST}/api/pay/${chain}/${addressOrName}/tx" />
           <meta name="fc:frame:button:3" content="Pay custom" />
           <meta name="fc:frame:button:3:action" content="tx" />
-          <meta name="fc:frame:button:3:target" content="${process.env.NEXT_PUBLIC_HOST}/api/pay/${chain}/${address}/tx" />
+          <meta name="fc:frame:button:3:target" content="${process.env.NEXT_PUBLIC_HOST}/api/pay/${chain}/${addressOrName}/tx" />
           <meta name="fc:frame:input:text" content="Custom amount in $" />
 
 
