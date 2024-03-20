@@ -55,7 +55,7 @@ export async function GET(req: any, params: any) {
         <head>
           <meta property="og:image" content="${image_url}" />
           <meta name="fc:frame" content="vNext" />
-          <meta name="fc:frame:post_url" content="${process.env.NEXT_PUBLIC_HOST}/api/${channel}" />
+          <meta name="fc:frame:post_url" content="${process.env.NEXT_PUBLIC_HOST}/api/channel/${channel}" />
           <meta name="fc:frame:image" content="${image_url}" />
           <meta name="fc:frame:button:1" content="Subscribe" />
           <meta name="fc:frame:button:1:action" content="subscribe:1" />
