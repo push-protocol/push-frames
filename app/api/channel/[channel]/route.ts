@@ -1,10 +1,13 @@
 import {NextResponse} from "next/server";
 import {PushAPI, CONSTANTS} from "@pushprotocol/restapi";
-import {ethers} from "ethers";
-import {isAddress} from "ethers/lib/utils";
+import {createPublicClient, http, isAddress} from "viem";
+import {privateKeyToAccount} from "viem/accounts";
 
 export async function GET(req: any, params: any) {
   const channel = params.params.channel;
+  const account = privateKeyToAccount(
+    (process.env.WALLET_PK as `0x${string}`) || ("" as `0x${string}`)
+  );
 
   if (!isAddress(channel)) {
     const image_url = `${process.env.NEXT_PUBLIC_HOST}/api/image?section=error&message=Not a Valid Address`;
@@ -31,8 +34,8 @@ export async function GET(req: any, params: any) {
       }
     );
   }
-  const signer = ethers.Wallet.createRandom();
-  const userAlice = await PushAPI.initialize(signer, {
+
+  const userAlice = await PushAPI.initialize(account as any, {
     env: CONSTANTS.ENV.PROD,
   });
   const channelInfo = await userAlice.channel.info(channel);

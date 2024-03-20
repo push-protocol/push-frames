@@ -16,6 +16,8 @@ export async function GET(req: NextRequest) {
   const verified = searchParams.get("verified") ?? "";
   const section = searchParams.get("section") ?? "1";
   const message = searchParams.get("message") ?? "";
+  const chain = searchParams.get("chain") ?? "";
+  const address = searchParams.get("address") ?? "";
 
   const image_url = `${process.env.NEXT_PUBLIC_HOST}/bg.png`;
   return new ImageResponse(
@@ -33,7 +35,16 @@ export async function GET(req: NextRequest) {
           backgroundPosition: "center",
         }}
       >
-        {getSection(section, name, verified, info, subCount, message)}
+        {getSection(
+          section,
+          name,
+          verified,
+          info,
+          subCount,
+          message,
+          chain,
+          address
+        )}
       </div>
     ),
     {
@@ -57,7 +68,9 @@ type getSection = (
   verified?: string,
   info?: string,
   subCount?: string,
-  message?: string
+  message?: string,
+  chain?: string,
+  address?: string
 ) => JSX.Element;
 
 const getSection: getSection = (
@@ -66,7 +79,9 @@ const getSection: getSection = (
   verified,
   info,
   subCount,
-  message
+  message,
+  chain,
+  address
 ) => {
   switch (section) {
     case "1":
@@ -203,6 +218,115 @@ const getSection: getSection = (
           {message && (
             <p style={{fontSize: "50px", textAlign: "center"}}>{message}</p>
           )}
+        </div>
+      );
+
+    case "pay":
+      return (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px",
+            width: "90%",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <h1
+            style={{
+              fontSize: "90px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              color: "white",
+            }}
+          >
+            Payments Made easy!
+          </h1>
+          <div
+            style={{
+              padding: "20px 40px",
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+              display: "flex",
+              flexDirection: "column",
+              border: "2px dashed #00ffff",
+            }}
+          >
+            <div
+              style={{
+                fontSize: "60px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                color: "white",
+                flexDirection: `${
+                  address?.startsWith("0x") ? "column" : "row"
+                }`,
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                }}
+              >
+                Send {chain}
+                <span
+                  style={{
+                    padding: "0 10px",
+                    backgroundImage:
+                      "linear-gradient(to right, #00d9ff, #c9fffb)",
+                    WebkitBackgroundClip: "text",
+                    backgroundClip: "text",
+                    color: "transparent",
+                  }}
+                >
+                  {chain === "matic" || chain === "polygon" ? "$MATIC" : "$ETH"}
+                </span>
+                to
+              </div>
+              <span
+                style={{
+                  paddingLeft: "10px",
+                  backgroundImage:
+                    "linear-gradient(to right, #00d9ff, #c9fffb)",
+                  WebkitBackgroundClip: "text",
+                  backgroundClip: "text",
+                  color: "transparent",
+                }}
+              >
+                {address}
+              </span>
+            </div>
+          </div>
+        </div>
+      );
+    case "payment_success":
+      return (
+        <div
+          style={{
+            padding: "20px 40px",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            flexDirection: "column",
+            border: "2px dashed #00ffff",
+          }}
+        >
+          <h1
+            style={{
+              fontSize: "120px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundImage: "linear-gradient(to right, #00d9ff, #c9fffb)",
+              WebkitBackgroundClip: "text",
+              backgroundClip: "text",
+              color: "transparent",
+            }}
+          >
+            Payment Successful
+          </h1>
         </div>
       );
     default:

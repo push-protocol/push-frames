@@ -1,14 +1,13 @@
 import {NextResponse} from "next/server";
-import {PushAPI, CONSTANTS} from "@pushprotocol/restapi";
-import {ethers} from "ethers";
-import {isAddress} from "ethers/lib/utils";
-import {getChainExplorer, isChainSupported} from "@/app/lib/utils";
-const supportedChains = ["ethereum", "bsc", "polygon", "base"];
+import {getChainExplorer, isChainSupported, resolveName} from "@/app/lib/utils";
+
 export async function GET(req: any, params: any) {
   const chain = params.params.chain;
   const address = params.params.address;
 
-  if (!isAddress(address)) {
+  const addressOrName = await resolveName(address);
+  console.log(addressOrName);
+  if (!addressOrName) {
     const image_url = `${process.env.NEXT_PUBLIC_HOST}/api/image?section=error&message=Not a Valid Address`;
     return new NextResponse(
       `<!DOCTYPE html>
@@ -61,7 +60,7 @@ export async function GET(req: any, params: any) {
   }
 
   if (address && chain) {
-    const image_url = `${process.env.NEXT_PUBLIC_HOST}/api/image?section=pay&chain=${chain}&address=${address}`;
+    const image_url = `${process.env.NEXT_PUBLIC_HOST}/api/image?section=pay&chain=${chain}&address=${addressOrName}`;
     return new NextResponse(
       `<!DOCTYPE html>
       <html>
@@ -72,13 +71,16 @@ export async function GET(req: any, params: any) {
           <meta name="fc:frame:image" content="${image_url}" />
           <meta name="fc:frame:button:1" content="Pay $5" />
           <meta name="fc:frame:button:1:action" content="tx" />
-          <meta name="fc:frame:button:1:target" content="${process.env.NEXT_PUBLIC_HOST}/pay/${chain}/${address}/tx" />
+          <meta name="fc:frame:button:1:target" content="${process.env.NEXT_PUBLIC_HOST}/api/pay/${chain}/${address}/tx" />
           <meta name="fc:frame:button:2" content="Pay $10" />
           <meta name="fc:frame:button:2:action" content="tx" />
-          <meta name="fc:frame:button:2:target" content="${process.env.NEXT_PUBLIC_HOST}/pay/${chain}/${address}/tx" />
+          <meta name="fc:frame:button:2:target" content="${process.env.NEXT_PUBLIC_HOST}/api/pay/${chain}/${address}/tx" />
           <meta name="fc:frame:button:3" content="Pay custom" />
           <meta name="fc:frame:button:3:action" content="tx" />
-          <meta name="fc:frame:button:3:target" content="${process.env.NEXT_PUBLIC_HOST}/pay/${chain}/${address}/tx" />
+          <meta name="fc:frame:button:3:target" content="${process.env.NEXT_PUBLIC_HOST}/api/pay/${chain}/${address}/tx" />
+          <meta name="fc:frame:input:text" content="Custom amount in $" />
+
+
         
         </head>
         <body/>
@@ -124,7 +126,7 @@ export async function POST(req: any, params: any) {
   const address = params.params.address;
 
   const image_url = `${process.env.NEXT_PUBLIC_HOST}/api/image?section=${
-    status === "error" ? "error" : "txsuccess"
+    status === "error" ? "error" : "payment_success"
   }&message=${message}`;
 
   const blockExplorer = getChainExplorer(chain, transactionId);
