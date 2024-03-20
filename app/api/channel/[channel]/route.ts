@@ -1,13 +1,19 @@
 import {NextResponse} from "next/server";
 import {PushAPI, CONSTANTS} from "@pushprotocol/restapi";
-import {createPublicClient, http, isAddress} from "viem";
+import {createWalletClient, http, isAddress} from "viem";
 import {privateKeyToAccount} from "viem/accounts";
+import {mainnet} from "viem/chains";
 
 export async function GET(req: any, params: any) {
   const channel = params.params.channel;
   const account = privateKeyToAccount(
     (process.env.WALLET_PK as `0x${string}`) || ("" as `0x${string}`)
   );
+  const client = createWalletClient({
+    account,
+    chain: mainnet,
+    transport: http(process.env.ALCHEMY_RPC),
+  });
 
   if (!isAddress(channel)) {
     const image_url = `${process.env.NEXT_PUBLIC_HOST}/api/image?section=error&message=Not a Valid Address`;
@@ -35,7 +41,7 @@ export async function GET(req: any, params: any) {
     );
   }
 
-  const userAlice = await PushAPI.initialize(account as any, {
+  const userAlice = await PushAPI.initialize(client, {
     env: CONSTANTS.ENV.PROD,
   });
   const channelInfo = await userAlice.channel.info(channel);
