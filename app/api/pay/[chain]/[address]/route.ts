@@ -60,7 +60,7 @@ export async function GET(req: any, params: any) {
   }
 
   if (address && chain) {
-    const image_url = `${process.env.NEXT_PUBLIC_HOST}/api/image?section=pay&chain=${chain}&address=${addressOrName}`;
+    const image_url = `${process.env.NEXT_PUBLIC_HOST}/api/image?section=pay&chain=${chain}&address=${address}`;
     return new NextResponse(
       `<!DOCTYPE html>
       <html>
