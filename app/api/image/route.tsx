@@ -282,7 +282,8 @@ const getSection: getSection = (
                     color: "transparent",
                   }}
                 >
-                  {chain === "matic" || chain === "polygon" ? "$MATIC" : "$ETH"}
+                  {/* {chain === "matic" || chain === "polygon" ? "$MATIC" : "$ETH"} */}
+                  {getToken(chain)}
                 </span>
                 to
               </div>
@@ -364,3 +365,16 @@ const getSection: getSection = (
       );
   }
 };
+
+function getToken(chain: string) {
+  switch (chain) {
+    case "matic":
+      return "$MATIC";
+    case "bsc":
+      return "$BNB";
+    case "polygon":
+      return "$MATIC";
+    default:
+      return "$ETH";
+  }
+}
