@@ -1,5 +1,5 @@
 import {NextResponse} from "next/server";
-import {getCoinAmountToSend} from "@/app/lib/utils";
+import {getChainId, getCoinAmountToSend} from "@/app/lib/utils";
 
 export async function POST(req: any, params: any) {
   const body = await req.json();
@@ -9,9 +9,14 @@ export async function POST(req: any, params: any) {
   const chain = params.params.chain;
   const address = params.params.address;
   let amount;
-  const url = `https://api.coingecko.com/api/v3/simple/price?ids=${
-    chain === "polygon" || chain === "matic" ? "matic-network" : "ethereum"
-  }&vs_currencies=usd`;
+  let url;
+  if (chain === "matic" || chain === "polygon") {
+    url = `https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=usd`;
+  } else if (chain === "bsc") {
+    url = `https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd`;
+  } else {
+    url = `https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd`;
+  }
   const options = {
     method: "GET",
     headers: {"x-cg-demo-api-key": process.env.CG_KEY || ""},
@@ -19,11 +24,15 @@ export async function POST(req: any, params: any) {
 
   const coingeckoResponse = await fetch(url, options);
   const coingeckoData = await coingeckoResponse.json();
-  const coinPrice =
-    coingeckoData[
-      chain === "polygon" || chain === "matic" ? "matic-network" : "ethereum"
-    ].usd;
-  console.log(coinPrice);
+  let coinPrice;
+  if (chain === "matic" || chain === "polygon") {
+    coinPrice = coingeckoData["matic-network"].usd;
+  } else if (chain === "bsc") {
+    coinPrice = coingeckoData.binancecoin.usd;
+  } else {
+    coinPrice = coingeckoData.ethereum.usd;
+  }
+
   if (buttonIndex === 1) {
     amount = getCoinAmountToSend(coinPrice.toString(), "5");
   } else if (buttonIndex === 2) {
@@ -33,7 +42,7 @@ export async function POST(req: any, params: any) {
   }
 
   const response = {
-    chainId: `eip155:${chain}`,
+    chainId: `eip155:${getChainId(chain)}`,
     method: "eth_sendTransaction",
     params: {
       to: address,

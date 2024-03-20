@@ -26,6 +26,22 @@ export function isChainSupported(chain: string) {
   const chains = ["ethereum", "bsc", "polygon", "base", "sepolia"];
   return chains.some((c) => c === chain);
 }
+export function getChainId(chain: string) {
+  switch (chain) {
+    case "sepolia":
+      return 11155111;
+    case "bsc":
+      return 56;
+    case "polygon":
+      return 137;
+    case "base":
+      return 8453;
+    case "ethereum":
+      return 1;
+    default:
+      return 137;
+  }
+}
 export function getChainExplorer(chain: string, tx: string) {
   let url;
   switch (chain) {
