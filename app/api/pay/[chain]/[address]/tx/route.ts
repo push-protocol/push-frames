@@ -32,10 +32,12 @@ export async function POST(req: any, params: any) {
   } else {
     coinPrice = coingeckoData.ethereum.usd;
   }
-
-  if (buttonIndex === 1) {
+  console.log(coinPrice);
+  console.log(inputText);
+  console.log(buttonIndex);
+  if (buttonIndex === "1") {
     amount = getCoinAmountToSend(coinPrice.toString(), "5");
-  } else if (buttonIndex === 2) {
+  } else if (buttonIndex === "2") {
     amount = getCoinAmountToSend(coinPrice.toString(), "10");
   } else {
     amount = getCoinAmountToSend(coinPrice.toString(), inputText);
