@@ -8,7 +8,7 @@ export async function GET(req: any, params: any) {
   const addressOrName = await resolveName(address);
   console.log(addressOrName);
   if (!addressOrName) {
-    const image_url = `${process.env.NEXT_PUBLIC_HOST}/api/image?section=error&message=Not a Valid Address`;
+    const image_url = `${process.env.NEXT_PUBLIC_HOST}/image?section=error&message=Not a Valid Address`;
     return new NextResponse(
       `<!DOCTYPE html>
       <html>
@@ -34,7 +34,7 @@ export async function GET(req: any, params: any) {
   }
 
   if (!isChainSupported(chain)) {
-    const image_url = `${process.env.NEXT_PUBLIC_HOST}/api/image?section=error&message=Chain is not supported`;
+    const image_url = `${process.env.NEXT_PUBLIC_HOST}/image?section=error&message=Chain is not supported`;
     return new NextResponse(
       `<!DOCTYPE html>
       <html>
@@ -60,24 +60,24 @@ export async function GET(req: any, params: any) {
   }
 
   if (address && chain) {
-    const image_url = `${process.env.NEXT_PUBLIC_HOST}/api/image?section=pay&chain=${chain}&address=${address}`;
+    const image_url = `${process.env.NEXT_PUBLIC_HOST}/image?section=pay&chain=${chain}&address=${address}`;
     return new NextResponse(
       `<!DOCTYPE html>
       <html>
         <head>
           <meta property="og:image" content="${image_url}" />
           <meta name="fc:frame" content="vNext" />
-          <meta name="fc:frame:post_url" content="${process.env.NEXT_PUBLIC_HOST}/api/pay/${chain}/${addressOrName}" />
+          <meta name="fc:frame:post_url" content="${process.env.NEXT_PUBLIC_HOST}/pay/${chain}/${addressOrName}" />
           <meta name="fc:frame:image" content="${image_url}" />
           <meta name="fc:frame:button:1" content="Pay $5" />
           <meta name="fc:frame:button:1:action" content="tx" />
-          <meta name="fc:frame:button:1:target" content="${process.env.NEXT_PUBLIC_HOST}/api/pay/${chain}/${addressOrName}/tx" />
+          <meta name="fc:frame:button:1:target" content="${process.env.NEXT_PUBLIC_HOST}/pay/${chain}/${addressOrName}/tx" />
           <meta name="fc:frame:button:2" content="Pay $10" />
           <meta name="fc:frame:button:2:action" content="tx" />
-          <meta name="fc:frame:button:2:target" content="${process.env.NEXT_PUBLIC_HOST}/api/pay/${chain}/${addressOrName}/tx" />
+          <meta name="fc:frame:button:2:target" content="${process.env.NEXT_PUBLIC_HOST}/pay/${chain}/${addressOrName}/tx" />
           <meta name="fc:frame:button:3" content="Pay custom" />
           <meta name="fc:frame:button:3:action" content="tx" />
-          <meta name="fc:frame:button:3:target" content="${process.env.NEXT_PUBLIC_HOST}/api/pay/${chain}/${addressOrName}/tx" />
+          <meta name="fc:frame:button:3:target" content="${process.env.NEXT_PUBLIC_HOST}/pay/${chain}/${addressOrName}/tx" />
           <meta name="fc:frame:input:text" content="Custom amount in $" />
 
 
@@ -93,7 +93,7 @@ export async function GET(req: any, params: any) {
       }
     );
   } else {
-    const image_url = `${process.env.NEXT_PUBLIC_HOST}/api/image?section=error&message=Wrong Parameters`;
+    const image_url = `${process.env.NEXT_PUBLIC_HOST}/image?section=error&message=Wrong Parameters`;
     return new NextResponse(
       `<!DOCTYPE html>
       <html>
@@ -125,7 +125,7 @@ export async function POST(req: any, params: any) {
   const chain = params.params.chain;
   const address = params.params.address;
 
-  const image_url = `${process.env.NEXT_PUBLIC_HOST}/api/image?section=${
+  const image_url = `${process.env.NEXT_PUBLIC_HOST}/image?section=${
     status === "error" ? "error" : "payment_success"
   }&message=${message}`;
 

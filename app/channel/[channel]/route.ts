@@ -16,7 +16,7 @@ export async function GET(req: any, params: any) {
   });
 
   if (!isAddress(channel)) {
-    const image_url = `${process.env.NEXT_PUBLIC_HOST}/api/image?section=error&message=Not a Valid Address`;
+    const image_url = `${process.env.NEXT_PUBLIC_HOST}/image?section=error&message=Not a Valid Address`;
     return new NextResponse(
       `<!DOCTYPE html>
       <html>
@@ -48,14 +48,14 @@ export async function GET(req: any, params: any) {
 
   if (channelInfo) {
     const verified = channelInfo.verified_status;
-    const image_url = `${process.env.NEXT_PUBLIC_HOST}/api/image?section=1&name=${channelInfo.name}&info=${channelInfo.info}&count=${channelInfo.subscriber_count}&verified=${verified}`;
+    const image_url = `${process.env.NEXT_PUBLIC_HOST}/image?section=1&name=${channelInfo.name}&info=${channelInfo.info}&count=${channelInfo.subscriber_count}&verified=${verified}`;
     return new NextResponse(
       `<!DOCTYPE html>
       <html>
         <head>
           <meta property="og:image" content="${image_url}" />
           <meta name="fc:frame" content="vNext" />
-          <meta name="fc:frame:post_url" content="${process.env.NEXT_PUBLIC_HOST}/api/channel/${channel}" />
+          <meta name="fc:frame:post_url" content="${process.env.NEXT_PUBLIC_HOST}/channel/${channel}" />
           <meta name="fc:frame:image" content="${image_url}" />
           <meta name="fc:frame:button:1" content="Subscribe" />
           <meta name="fc:frame:button:1:action" content="subscribe:1" />
@@ -72,7 +72,7 @@ export async function GET(req: any, params: any) {
       }
     );
   } else {
-    const image_url = `${process.env.NEXT_PUBLIC_HOST}/api/image?section=error&message=No Channel Exists`;
+    const image_url = `${process.env.NEXT_PUBLIC_HOST}/image?section=error&message=No Channel Exists`;
     return new NextResponse(
       `<!DOCTYPE html>
       <html>
@@ -101,7 +101,7 @@ export async function POST(req: any, params: any) {
   const status = body.status;
   const message = body.message;
   const channel = params.params.channel;
-  const image_url = `${process.env.NEXT_PUBLIC_HOST}/api/image?section=${
+  const image_url = `${process.env.NEXT_PUBLIC_HOST}/image?section=${
     status === "error" ? "error" : "2"
   }&message=${message}`;
   return new NextResponse(
