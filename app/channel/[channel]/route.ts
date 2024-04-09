@@ -98,12 +98,9 @@ export async function GET(req: any, params: any) {
 }
 export async function POST(req: any, params: any) {
   const body = await req.json();
-  const status = body.status;
   const message = body.message;
   const channel = params.params.channel;
-  const image_url = `${process.env.NEXT_PUBLIC_HOST}/image?section=${
-    status === "error" ? "error" : "2"
-  }&message=${message}`;
+  const image_url = `${process.env.NEXT_PUBLIC_HOST}/image?section=2&message=${message}`;
   return new NextResponse(
     `<!DOCTYPE html>
       <html>
