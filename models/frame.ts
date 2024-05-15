@@ -9,6 +9,7 @@ const frameSchema = new Schema(
     command: {
       type: String,
       required: true,
+      unique: true,
     },
     url: {
       type: String,
