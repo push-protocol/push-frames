@@ -1,14 +1,13 @@
 import {NextResponse} from "next/server";
 import {PushAPI, CONSTANTS} from "@pushprotocol/restapi";
 import {createWalletClient, http, isAddress} from "viem";
-import {privateKeyToAccount} from "viem/accounts";
+import {generatePrivateKey, privateKeyToAccount} from "viem/accounts";
 import {mainnet} from "viem/chains";
 
 export async function GET(req: any, params: any) {
   const channel = params.params.channel;
-  const account = privateKeyToAccount(
-    (process.env.WALLET_PK as `0x${string}`) || ("" as `0x${string}`)
-  );
+  const privateKey = generatePrivateKey();
+  const account = privateKeyToAccount(privateKey);
   const client = createWalletClient({
     account,
     chain: mainnet,
