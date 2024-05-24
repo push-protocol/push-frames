@@ -4,6 +4,7 @@ import {MdVerified} from "react-icons/md";
 
 import {join} from "path";
 import fs from "fs";
+import {verifyState} from "../channel/create/route";
 const fontPath = join(process.cwd(), "public/ProtestStrike-Regular.ttf");
 let myFont = fs.readFileSync(fontPath);
 
@@ -18,8 +19,13 @@ export async function GET(req: NextRequest) {
   const message = searchParams.get("message") ?? "";
   const chain = searchParams.get("chain") ?? "";
   const address = searchParams.get("address") ?? "";
-
+  const step = searchParams.get("step") ?? "0";
   const image_url = `${process.env.NEXT_PUBLIC_HOST}/bg.png`;
+  const error = searchParams.get("error") ?? "";
+  const state = searchParams.get("state") ?? "";
+  console.log("state", state);
+  const deserializeState =
+    state.length > 2 ? await verifyState(state) : undefined;
   return new ImageResponse(
     (
       <div
@@ -43,7 +49,10 @@ export async function GET(req: NextRequest) {
           subCount,
           message,
           chain,
-          address
+          address,
+          step,
+          error,
+          deserializeState
         )}
       </div>
     ),
@@ -70,19 +79,26 @@ type getSection = (
   subCount?: string,
   message?: string,
   chain?: string,
-  address?: string
+  address?: string,
+  step?: string,
+  error?: string,
+  state?: any
 ) => JSX.Element;
 
 const getSection: getSection = (
-  section: string,
+  section,
   name,
   verified,
   info,
   subCount,
   message,
   chain,
-  address
+  address,
+  step,
+  error,
+  state
 ) => {
+  console.log("state", state);
   switch (section) {
     case "1":
       return (
@@ -330,6 +346,346 @@ const getSection: getSection = (
           </h1>
         </div>
       );
+
+    case "create_channel":
+      if (step === "0") {
+        return (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "20px",
+              width: "1200px",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <h1
+              style={{
+                fontSize: "120px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                color: "white",
+                textAlign: "center",
+              }}
+            >
+              Create a Push Channel
+            </h1>
+          </div>
+        );
+      } else if (step === "1") {
+        return (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "20px",
+              width: "1200px",
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+            }}
+          >
+            <h1
+              style={{
+                fontSize: "120px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                color: "white",
+                textAlign: "center",
+              }}
+            >
+              Input the name of the channel
+            </h1>
+          </div>
+        );
+      } else if (step === "2") {
+        return (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "20px",
+              width: "1200px",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <h1
+              style={{
+                fontSize: "120px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                color: "white",
+                textAlign: "center",
+              }}
+            >
+              Description of the channel
+            </h1>
+          </div>
+        );
+      } else if (step === "3") {
+        return (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "20px",
+              width: "1200px",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <h1
+              style={{
+                fontSize: "120px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                color: "white",
+                textAlign: "center",
+              }}
+            >
+              Website URL of the channel
+            </h1>
+          </div>
+        );
+      } else if (step === "4") {
+        return (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "20px",
+              width: "1200px",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <h1
+              style={{
+                fontSize: "120px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                color: "white",
+              }}
+            >
+              Channel Icon URL
+            </h1>
+          </div>
+        );
+      } else if (step === "5") {
+        return (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "20px",
+              width: "1200px",
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+            }}
+          >
+            <h1
+              style={{
+                fontSize: "120px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                color: "white",
+                textAlign: "center",
+              }}
+            >
+              $Push Staking
+            </h1>
+            <p
+              style={{
+                fontSize: "60px",
+                textAlign: "center",
+                color: "white",
+              }}
+            >
+              You will have to stake 50 $PUSH tokens for creating a Channel in
+              Push Network
+            </p>
+
+            {error && error !== "undefined" && <p>{error}</p>}
+          </div>
+        );
+      } else if (step === "6") {
+        return (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "20px",
+              width: "1300px",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <h1
+              style={{
+                fontSize: "120px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                color: "white",
+                textAlign: "center",
+              }}
+            >
+              Confirm your channel details
+            </h1>
+
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                gap: "20px",
+                backgroundColor: "rgba(0, 0, 0, 0.5)",
+                padding: "20px",
+                borderRadius: "10px",
+                border: "2px dashed #00ffff",
+                width: "1200px",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "20px",
+
+                  padding: "20px",
+                  borderRadius: "10px",
+
+                  width: "800px",
+                }}
+              >
+                <p
+                  style={{
+                    fontSize: "40px",
+                    color: "white",
+                    display: "flex",
+                    flexDirection: "row",
+                    gap: "10px",
+                    alignItems: "flex-end",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: "60px",
+                      color: "#00FF00",
+                    }}
+                  >
+                    Name:
+                  </span>{" "}
+                  {state?.name ?? ""}
+                </p>
+                <p
+                  style={{
+                    fontSize: "40px",
+                    color: "white",
+                    display: "flex",
+                    flexDirection: "row",
+                    gap: "10px",
+                    alignItems: "flex-end",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: "60px",
+                      color: "#00FF00",
+                    }}
+                  >
+                    Info:
+                  </span>{" "}
+                  {state?.description ?? ""}
+                </p>
+                <p
+                  style={{
+                    fontSize: "40px",
+                    color: "white",
+                    display: "flex",
+                    flexDirection: "row",
+                    gap: "10px",
+                    alignItems: "flex-end",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: "60px",
+                      color: "#00FF00",
+                    }}
+                  >
+                    Website:
+                  </span>{" "}
+                  {state?.website ?? ""}
+                </p>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "20px",
+                  padding: "20px",
+                  borderRadius: "10px",
+
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <p
+                  style={{
+                    fontSize: "60px",
+                    color: "white",
+                  }}
+                >
+                  Channel Icon
+                </p>
+                <img
+                  src={state.icon ?? ""}
+                  alt=""
+                  width={"220px"}
+                  height={"220px"}
+                />
+              </div>
+            </div>
+          </div>
+        );
+      } else if (step === "7") {
+        return (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "20px",
+              width: "1200px",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <h1
+              style={{
+                fontSize: "120px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                color: "white",
+              }}
+            >
+              Channel Created Successfully!
+            </h1>
+          </div>
+        );
+      }
+
     default:
       return (
         <div
