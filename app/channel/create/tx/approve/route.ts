@@ -21,7 +21,7 @@ export async function POST(req: any) {
       ],
     });
     console.log({
-      chainId: "eip155:11155111",
+      chainId: `eip155:${process.env.env === "staging" ? 11155111 : 1}`,
       method: "eth_sendTransaction",
       params: {
         abi: PUSH_TOKEN_ABI,

@@ -1,6 +1,9 @@
+import {State} from "@/types";
 import {normalize} from "path";
 import {createPublicClient, http, isAddress, parseEther} from "viem";
 import {mainnet} from "viem/chains";
+import * as jose from "jose";
+import {randomUUID} from "crypto";
 const validUDExtensions = [
   ".x",
   ".polygon",
@@ -108,4 +111,57 @@ export async function resolveName(nameOrAddress: string) {
   } else {
     return nameOrAddress;
   }
+}
+const JWS_SECRET = process.env["JWS_SECRET"] ?? "";
+
+export async function encodeState(state: State) {
+  return await new jose.CompactSign(
+    new TextEncoder().encode(JSON.stringify({...state, nonce: randomUUID()}))
+  )
+    .setProtectedHeader({alg: "HS256"})
+    .sign(Buffer.from(JWS_SECRET, "hex"));
+}
+export async function verifyState(encodedState: string): Promise<State> {
+  const {payload} = await jose.compactVerify(
+    encodedState,
+    Buffer.from(JWS_SECRET, "hex")
+  );
+  const {nonce, ...state} = JSON.parse(new TextDecoder().decode(payload));
+  return state;
+}
+
+export async function deriveState(state: State, input: string) {
+  console.log("input:", input);
+  console.log("deriving state:", state);
+  if (state.pointer == 1) {
+    state.name = input;
+  } else if (state.pointer == 2) {
+    state.description = input;
+  } else if (state.pointer == 3) {
+    state.website = input;
+  } else if (state.pointer == 4) {
+    // Assuming `input` is the image URL here
+    // const imageUrl = input;
+    // try {
+    //   const response = await fetch(imageUrl);
+    //   const arrayBuffer = await response.arrayBuffer();
+    //   const buffer = Buffer.from(arrayBuffer);
+    //   console.log(`data:image/jpeg;base64,${buffer.toString("base64")}`);
+    //   state.icon = `data:image/jpeg;base64,${buffer.toString("base64")}`;
+    // } catch (error) {
+    //   console.error("Failed to fetch or convert image:", error);
+    //   state.icon = "";
+    // }
+
+    state.icon = input;
+  } else if (state.pointer == 5) {
+    console.log(
+      "this is where you need to check if the user has enough approval to create a channel"
+    );
+  } else if (state.pointer == 6) {
+    console.log("this is where you actually trigger tx ");
+  }
+  state.pointer++;
+
+  return state;
 }

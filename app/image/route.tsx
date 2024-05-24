@@ -4,7 +4,8 @@ import {MdVerified} from "react-icons/md";
 
 import {join} from "path";
 import fs from "fs";
-import {verifyState} from "../channel/create/route";
+import {verifyState} from "../lib/utils";
+
 const fontPath = join(process.cwd(), "public/ProtestStrike-Regular.ttf");
 let myFont = fs.readFileSync(fontPath);
 

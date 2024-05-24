@@ -1,5 +1,5 @@
 import {NextResponse} from "next/server";
-import {deriveState, verifyState} from "../../route";
+
 import {mainnet} from "viem/chains";
 import {
   createPublicClient,
@@ -16,6 +16,7 @@ import {
   PUSH_CORE_CONTRACT_ADDRESS_SEPOLIA,
   PUSH_TOKEN_ADDRESS_MAINNET,
 } from "@/constants";
+import {verifyState} from "@/app/lib/utils";
 
 export async function POST(req: any) {
   const {
@@ -73,7 +74,7 @@ export async function POST(req: any) {
       args: [2, identityBytes, parseEther("50"), 0],
     });
     return NextResponse.json({
-      chainId: "eip155:11155111",
+      chainId: `eip155:${process.env.env === "staging" ? 11155111 : 1}`,
       method: "eth_sendTransaction",
       params: {
         abi: PUSH_CORE_CONTRACT_ABI,

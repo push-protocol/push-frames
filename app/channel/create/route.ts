@@ -1,85 +1,22 @@
 import {NextRequest, NextResponse} from "next/server";
-import * as jose from "jose";
-import {randomUUID} from "crypto";
 import {createPublicClient, erc20Abi, http} from "viem";
-import {mainnet, polygon} from "viem/chains";
-import {
-  PUSH_CORE_CONTRACT_ADDRESS,
-  PUSH_TOKEN_ADDRESS_MAINNET,
-} from "@/constants";
+import {mainnet} from "viem/chains";
 
-interface State {
-  pointer: number;
-  name: string;
-  description: string;
-  website: string;
-  icon: string;
-  error?: string;
-}
+import {deriveState, encodeState, verifyState} from "@/app/lib/utils";
+import {State} from "@/types";
+
 const publicClient = createPublicClient({
   chain: mainnet,
   transport: http(),
 });
-const JWS_SECRET = process.env["JWS_SECRET"] ?? "";
-
-async function encodeState(state: State) {
-  return await new jose.CompactSign(
-    new TextEncoder().encode(JSON.stringify({...state, nonce: randomUUID()}))
-  )
-    .setProtectedHeader({alg: "HS256"})
-    .sign(Buffer.from(JWS_SECRET, "hex"));
-}
-
-export async function verifyState(encodedState: string): Promise<State> {
-  const {payload} = await jose.compactVerify(
-    encodedState,
-    Buffer.from(JWS_SECRET, "hex")
-  );
-  const {nonce, ...state} = JSON.parse(new TextDecoder().decode(payload));
-  return state;
-}
-
-export async function deriveState(state: State, input: string) {
-  console.log("input:", input);
-  console.log("deriving state:", state);
-  if (state.pointer == 1) {
-    state.name = input;
-  } else if (state.pointer == 2) {
-    state.description = input;
-  } else if (state.pointer == 3) {
-    state.website = input;
-  } else if (state.pointer == 4) {
-    // Assuming `input` is the image URL here
-    // const imageUrl = input;
-    // try {
-    //   const response = await fetch(imageUrl);
-    //   const arrayBuffer = await response.arrayBuffer();
-    //   const buffer = Buffer.from(arrayBuffer);
-    //   console.log(`data:image/jpeg;base64,${buffer.toString("base64")}`);
-    //   state.icon = `data:image/jpeg;base64,${buffer.toString("base64")}`;
-    // } catch (error) {
-    //   console.error("Failed to fetch or convert image:", error);
-    //   state.icon = "";
-    // }
-
-    state.icon = input;
-  } else if (state.pointer == 5) {
-    console.log(
-      "this is where you need to check if the user has enough approval to create a channel"
-    );
-  } else if (state.pointer == 6) {
-    console.log("this is where you actually trigger tx ");
-  }
-  state.pointer++;
-
-  return state;
-}
 
 export async function POST(req: NextRequest) {
   const {
     untrustedData: {buttonIndex, address, inputText, state: serializedState},
   } = await req.json();
-
+  console.log("buttonIndex", buttonIndex);
+  console.log("address", address);
+  console.log("inputText", inputText);
   let state: State;
   if (!serializedState) {
     state = {
